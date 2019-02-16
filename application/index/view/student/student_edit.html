@@ -1,0 +1,131 @@
+{include file='public/meta'/}
+{include file='public/footer'/}
+{block name='seo'}
+<title>{$title|default='标题'}</title>
+<meta name="keywords" content="{$keywords|default='关键字'}">
+<meta name="description" content="{$description|default='描述'}">
+{/block}
+{block name='content'}
+<article class="cl pd-20">
+	<form action="" method="post" class="form form-horizontal" id="form-student-edit">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>姓名：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+
+				<input  type="text" class="input-text" value="{$student_info.name}" placeholder="" id="name" name="name">
+			</div>
+		</div>
+
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">性别：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box" style="width:150px;">
+				<select class="select" name="sex" size="1">
+
+					<option value="0" {if $student_info.sex=='男'}selected{/if}>男</option>
+					<option value="1" {if $student_info.sex=='女'}selected{/if}>女</option>
+
+				</select>
+				</span>
+			</div>
+		</div>
+
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red"></span>年龄：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="number" class="input-text" placeholder="年龄" name="age" id="age" value="{$student_info.age}">
+			</div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>手机号码：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text "  placeholder="手机号码" name="mobile" id="mobile" value="{$student_info.mobile}" >
+			</div>
+		</div>
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>邮箱：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="email" class="input-text "  placeholder="邮箱" name="email" id="email" value="{$student_info.email}" >
+			</div>
+		</div>
+
+
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>入学时间：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="date" class="input-text " placeholder="入学时间" name="start_time" id="start_time" value="{$student_info.start_time}" >
+			</div>
+		</div>
+
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">班级：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box" style="width:150px;">
+				<select class="select" name="grade_id" size="1">
+					{volist name='gradeList' id='vo'}
+					<option value="{$vo.id}" {if $student_info.grade_id==$vo.id}selected{/if}>{$vo.name}</option>
+					{/volist}
+
+				</select>
+				</span>
+			</div>
+		</div>
+
+
+
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">启用状态：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box" style="width:150px;">
+				<select class="select" name="status" size="1">
+
+					<option value="1"{if $student_info.status==1}selected{/if}>启用</option>
+					<option value="0" {if $student_info.status==0}selected{/if}>不启用</option>
+
+
+				</select>
+				</span>
+			</div>
+		</div>
+		<input type="hidden" name="id" value="{$student_info.id}">
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input class="btn btn-primary radius disabled" type="button" value="&nbsp;&nbsp;提交&nbsp;&nbsp;" id="submit" >
+			</div>
+		</div>
+	</form>
+</article>
+{/block}
+{block name='js'}
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/jquery.validate.js"></script> 
+<script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/validate-methods.js"></script> 
+<script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/messages_zh.js"></script> 
+<script type="text/javascript">
+$(function(){
+	//防止用户无更新提交,只有表中数据有变化时才允许提交
+	$("form").children().change(function(){
+		$('#submit').removeClass('disabled');
+	});
+	$('#submit').on('click',function(){
+		$.ajax({
+			type:'POST',
+			url:"{:url('student/editStudent')}",
+			data:$('#form-student-edit').serialize(),
+			dataType:'json',
+			success:function(data){
+				if(data.status==1){
+					alert(data.message);
+				}else{
+					alert(data.message);
+				}
+			}
+		});
+	});
+});
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+{/block}
